@@ -177,7 +177,10 @@ router.post('/whatsapp/connect', waConnectLimiter, (req, res) => {
             code: 'WA_NOT_ENABLED'
         });
     }
-    const result = initWhatsAppClient(req.user.id);
+    // A deliberate dashboard click may restart a recovery cycle only after
+    // the previous one has fully stopped. Automatic retries keep their
+    // exponential backoff and cannot be reset by repeated requests.
+    const result = initWhatsAppClient(req.user.id, { resetFailures: true });
     if (result && result.accepted === false) {
         return res.status(503).json({ success: false, error: result.reason, code: 'WA_AT_CAPACITY' });
     }

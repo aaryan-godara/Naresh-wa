@@ -931,20 +931,20 @@ function countUsers() {
 }
 
 /**
- * Creates a new account. Role is always 'user' regardless of how many
- * accounts exist — the old "first signup becomes admin" behaviour was a
- * security vulnerability: any database reset allowed an attacker who signed
- * up first to claim admin access. Admin promotion is now exclusively via
- * ensureBootstrapAdmin() (BOOTSTRAP_ADMIN_EMAIL env var, called on boot)
- * or via the admin panel (an existing admin promoting another account).
+ * Creates a new account. A private fresh installation can opt in to making
+ * its first signup an admin with ALLOW_FIRST_SIGNUP_ADMIN=true. This remains
+ * off by default because an internet-facing signup page must not let whoever
+ * arrives first claim control of the instance.
  */
 function createUser({ email, passwordHash, businessName = '', ownerName = '' }) {
     const normalizedEmail = String(email).trim().toLowerCase();
     return transaction(() => {
+        const allowFirstSignupAdmin = process.env.ALLOW_FIRST_SIGNUP_ADMIN === 'true';
+        const role = allowFirstSignupAdmin && countUsers() === 0 ? 'admin' : 'user';
         db.run(
             `INSERT INTO users (email, password_hash, business_name, owner_name, role, status, plan)
-             VALUES (?, ?, ?, ?, 'user', 'active', 'free')`,
-            [normalizedEmail, passwordHash, businessName, ownerName]
+             VALUES (?, ?, ?, ?, ?, 'active', 'free')`,
+            [normalizedEmail, passwordHash, businessName, ownerName, role]
         );
         const lastId = db.exec('SELECT last_insert_rowid()')[0]?.values[0][0] || 0;
         for (const [key, value] of Object.entries(DEFAULT_SETTINGS)) {

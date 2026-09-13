@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
-   WhatsApp Automation Dashboard — "Verdant Cream" Theme v3
-   Deep green gradients on warm cream — clean, calm, smooth.
+   Naressh Israni Dashboard — monochrome product theme
+   Off-white surfaces, black controls, restrained green status accents.
    ═══════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
@@ -14,43 +14,43 @@
 
 /* ─── Design Tokens ──────────────────────────────────────── */
 :root {
-    /* Greens */
-    --green-950: #07281D;
-    --green-900: #0B3B2A;
-    --green-800: #0E4A34;
-    --green-700: #11603F;
-    --green-600: #14784C;
-    --green-500: #1B9457;
-    --green-400: #2FB56E;
-    --green-300: #6ED09A;
-    --green-100: #DDF0E2;
-    --green-050: #EDF6EE;
+    /* Neutral application palette */
+    --green-950: #111111;
+    --green-900: #191919;
+    --green-800: #272727;
+    --green-700: #353535;
+    --green-600: #454545;
+    --green-500: #5B5B57;
+    --green-400: #7A7A74;
+    --green-300: #A7A7A0;
+    --green-100: #E7E7E1;
+    --green-050: #F3F3EF;
 
-    /* Cream neutrals */
-    --cream-bg:      #F6F2E7;   /* page background */
-    --cream-card:    #FFFDF6;   /* cards / surfaces */
-    --cream-subtle:  #F1ECDD;   /* wells, table heads, kanban columns */
-    --cream-deep:    #E9E2CE;
+    /* Off-white surfaces */
+    --cream-bg:      #F7F7F4;
+    --cream-card:    #FFFFFF;
+    --cream-subtle:  #F0F0EC;
+    --cream-deep:    #E2E2DC;
 
-    /* Gradients */
-    --grad-primary: linear-gradient(135deg, #128C4B 0%, #1FA463 55%, #35BC77 100%);
-    --grad-primary-hover: linear-gradient(135deg, #0F7A41 0%, #189256 55%, #2BAA6B 100%);
-    --grad-sidebar: linear-gradient(168deg, #0A3325 0%, #0D4530 45%, #10593B 100%);
-    --grad-icon-a: linear-gradient(135deg, #128C4B, #35BC77);
-    --grad-icon-b: linear-gradient(135deg, #0E6C55, #2CA58D);
-    --grad-icon-c: linear-gradient(135deg, #B98A2F, #D9B45B);
-    --grad-icon-d: linear-gradient(135deg, #4E6E45, #7FA36B);
+    /* Black controls and neutral hierarchy */
+    --grad-primary: linear-gradient(135deg, #111111 0%, #202020 100%);
+    --grad-primary-hover: linear-gradient(135deg, #292929 0%, #3A3A3A 100%);
+    --grad-sidebar: linear-gradient(168deg, #111111 0%, #1A1A1A 100%);
+    --grad-icon-a: linear-gradient(135deg, #111111, #30302E);
+    --grad-icon-b: linear-gradient(135deg, #222222, #484844);
+    --grad-icon-c: linear-gradient(135deg, #353532, #62625D);
+    --grad-icon-d: linear-gradient(135deg, #171717, #3C3C39);
 
     /* Compatibility tokens (used by inline styles & JS) */
-    --color-primary-500: #1B9457;
-    --color-primary-700: #11603F;
-    --color-primary-900: #0B3B2A;
+    --color-primary-500: #111111;
+    --color-primary-700: #272727;
+    --color-primary-900: #111111;
     --color-bg:        var(--cream-subtle);
     --color-bg-subtle: var(--cream-bg);
-    --color-border:    #E5DEC9;
-    --color-text-primary:   #23312A;
-    --color-text-secondary: #7B8378;
-    --color-success: #1B9457;
+    --color-border:    #DCDCD5;
+    --color-text-primary:   #151515;
+    --color-text-secondary: #6B6B66;
+    --color-success: #25A85B;
     --color-warning: #C08A2D;
     --color-error:   #C4553D;
     --color-info:    #3E7CB1;
@@ -70,16 +70,16 @@
     --radius-xl: 20px;
 
     /* Shadows — warm, soft */
-    --shadow-sm: 0 1px 2px rgba(35, 49, 42, 0.05);
-    --shadow-md: 0 6px 24px rgba(35, 49, 42, 0.07);
-    --shadow-lg: 0 18px 48px rgba(11, 59, 42, 0.16);
-    --shadow-green: 0 6px 18px rgba(20, 140, 80, 0.28);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.13);
+    --shadow-green: 0 6px 18px rgba(0, 0, 0, 0.18);
 
     /* Layout */
     --sidebar-w: 250px;
     --topbar-h:  62px;
 
-    --focus-ring: 0 0 0 3px rgba(27, 148, 87, 0.22);
+    --focus-ring: 0 0 0 3px rgba(17, 17, 17, 0.16);
 
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
@@ -162,11 +162,7 @@ html { font-size: 14px; scroll-behavior: smooth; }
 
 body {
     font-family: var(--font-body);
-    background:
-        radial-gradient(1000px 500px at 85% -10%, rgba(27, 148, 87, 0.07), transparent 60%),
-        radial-gradient(800px 420px at -10% 110%, rgba(185, 138, 47, 0.05), transparent 55%),
-        var(--cream-bg);
-    background-attachment: fixed;
+    background: var(--cream-bg);
     color: var(--color-text-primary);
     display: flex;
     min-height: 100vh;
@@ -179,16 +175,16 @@ a { color: inherit; text-decoration: none; }
 
 h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
 
-::selection { background: rgba(27, 148, 87, 0.22); }
+::selection { background: rgba(17, 17, 17, 0.16); }
 
 /* ─── Scrollbar ──────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-    background: rgba(17, 96, 63, 0.22);
+    background: rgba(17, 17, 17, 0.22);
     border-radius: 999px;
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(17, 96, 63, 0.38); }
+::-webkit-scrollbar-thumb:hover { background: rgba(17, 17, 17, 0.38); }
 
 /* ═══════════════════════════════════════════════════════════
    SIDEBAR
@@ -202,7 +198,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
     flex-direction: column;
     z-index: 200;
     transition: transform 0.32s var(--ease);
-    box-shadow: 4px 0 28px rgba(7, 40, 29, 0.18);
+    box-shadow: 4px 0 28px rgba(0, 0, 0, 0.14);
 }
 
 .sidebar::after {
@@ -210,7 +206,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(420px 260px at 20% 0%, rgba(255, 253, 246, 0.08), transparent 70%);
+    background: radial-gradient(420px 260px at 20% 0%, rgba(255, 255, 255, 0.07), transparent 70%);
     pointer-events: none;
 }
 
@@ -363,7 +359,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
     align-items: center;
     gap: 16px;
     padding: 0 28px;
-    background: rgba(246, 242, 231, 0.82);
+    background: rgba(247, 247, 244, 0.88);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--color-border);
@@ -497,7 +493,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(7, 40, 29, 0.45);
+    background: rgba(0, 0, 0, 0.42);
     backdrop-filter: blur(2px);
     z-index: 190;
 }
@@ -617,7 +613,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
     width: 90px;
     height: 90px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(27, 148, 87, 0.06), transparent 70%);
+    background: radial-gradient(circle, rgba(17, 17, 17, 0.055), transparent 70%);
 }
 
 .stat-card:hover {
@@ -653,6 +649,13 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
 .stat-icon.followups { background: linear-gradient(135deg, #8A6DB1, #AC8FD4); }
 .stat-icon.whatsapp  { background: var(--grad-icon-a); }
 .stat-icon.ai        { background: linear-gradient(135deg, #0E6C55, #2CA58D); }
+.stat-icon.total,
+.stat-icon.scheduled,
+.stat-icon.analyzed,
+.stat-icon.hot,
+.stat-icon.deals,
+.stat-icon.followups,
+.stat-icon.ai { background: var(--grad-icon-b); }
 
 /* Group headings between stat rows */
 .stat-group-title {
@@ -1526,8 +1529,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
     gap: 10px;
     min-width: 280px;
     max-width: 400px;
-    background: #223129;
-    color: #FBF8EE;
+    background: #191919;
+    color: #FFFFFF;
     border-radius: 14px;
     padding: 13px 16px;
     font-size: 0.86rem;

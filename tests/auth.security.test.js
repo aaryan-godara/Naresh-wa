@@ -28,6 +28,19 @@ describe('Authentication & session security', () => {
             expect(second.user.role).toBe('user');
         });
 
+        test('assigns admin to the first signup only when private first-install mode is enabled', async () => {
+            process.env.ALLOW_FIRST_SIGNUP_ADMIN = 'true';
+            await freshDatabase();
+            app = createTestApp();
+
+            const first = await signup(app, { email: 'owner@example.com' });
+            expect(first.user.role).toBe('admin');
+
+            const second = await signup(app, { email: 'member@example.com' });
+            expect(second.user.role).toBe('user');
+            delete process.env.ALLOW_FIRST_SIGNUP_ADMIN;
+        });
+
         test.each([
             ['malformed', 'not-an-email'],
             ['empty', ''],

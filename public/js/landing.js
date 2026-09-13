@@ -100,22 +100,23 @@ function initHeroCanvas() {
     }
 }
 
-// ─── 3D tilt on the phone mockup, following the pointer ────
+// ─── Gentle pointer-following movement for the phone mockup ─
 function initPhoneTilt() {
     const scene = document.getElementById('heroScene');
     const phone = document.getElementById('phoneMock');
-    if (!scene || !phone) return;
+    if (!scene || !phone || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
     scene.addEventListener('mousemove', (e) => {
         const rect = scene.getBoundingClientRect();
         const px = (e.clientX - rect.left) / rect.width - 0.5;
         const py = (e.clientY - rect.top) / rect.height - 0.5;
-        const rotY = -14 + px * 22;
-        const rotX = 6 - py * 18;
-        phone.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+        const x = px * 10;
+        const y = py * 8;
+        const rotation = -1 + px * 2;
+        phone.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
     });
     scene.addEventListener('mouseleave', () => {
-        phone.style.transform = 'rotateY(-14deg) rotateX(6deg)';
+        phone.style.transform = 'rotate(-1deg)';
     });
 }
 
@@ -186,15 +187,26 @@ function initChatLoop() {
         { side: 'out', text: '10% off this month — I\'ll mark you as a hot lead for the team!' }
     ];
 
-    let i = 0;
     let running = false;
 
-    function addBubble(side, text) {
+    function addBubble(side, text, animated = true) {
         const b = document.createElement('div');
         b.className = 'bubble ' + side;
         b.textContent = text;
+        if (!animated) {
+            b.style.animation = 'none';
+            b.style.opacity = '1';
+            b.style.transform = 'none';
+        }
         chat.appendChild(b);
         chat.scrollTop = chat.scrollHeight;
+    }
+
+    // Seed the mockup immediately so its screen never flashes blank while the
+    // rest of the conversation plays or restarts.
+    function renderOpeningMessages() {
+        chat.innerHTML = '';
+        script.slice(0, 2).forEach((msg) => addBubble(msg.side, msg.text, false));
     }
 
     function addTyping() {
@@ -214,8 +226,7 @@ function initChatLoop() {
     async function step() {
         if (running) return;
         running = true;
-        chat.innerHTML = '';
-        for (const msg of script) {
+        for (const msg of script.slice(2)) {
             await new Promise(r => setTimeout(r, msg.side === 'out' ? 1100 : 900));
             if (msg.side === 'out') {
                 addTyping();
@@ -225,7 +236,11 @@ function initChatLoop() {
             addBubble(msg.side, msg.text);
         }
         running = false;
-        setTimeout(step, 3200);
+        setTimeout(() => {
+            renderOpeningMessages();
+            step();
+        }, 3200);
     }
+    renderOpeningMessages();
     step();
 }

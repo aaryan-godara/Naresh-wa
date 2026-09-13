@@ -24,6 +24,7 @@ const os = require('os');
 // database — causing the countUsers() === 0 assertion in freshDatabase() to
 // throw and making 100+ tests fail with misleading isolation errors.
 delete process.env.BOOTSTRAP_ADMIN_EMAIL;
+delete process.env.ALLOW_FIRST_SIGNUP_ADMIN;
 delete process.env.GOOGLE_CALENDAR_CLIENT_ID;
 delete process.env.GOOGLE_CALENDAR_CLIENT_SECRET;
 delete process.env.GOOGLE_CALENDAR_REDIRECT_URI;

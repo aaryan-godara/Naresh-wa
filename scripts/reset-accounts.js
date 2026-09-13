@@ -1,7 +1,8 @@
 /**
  * Deletes every account (all emails/passwords/roles) so the next signup
- * through the frontend becomes the first account again — and therefore
- * automatically gets the admin role.
+ * through the frontend becomes the first account again. It receives the admin
+ * role only when ALLOW_FIRST_SIGNUP_ADMIN=true is configured for this private
+ * installation.
  *
  * Scope: this ONLY touches the `users` table. Existing contacts, messages,
  * CRM deals, chatbot rules, settings, etc. are left in the database as-is —

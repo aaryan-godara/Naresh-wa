@@ -253,6 +253,17 @@ async function safeDestroyClient(s) {
  */
 const MAX_CRASHES_BEFORE_GIVING_UP = 10;
 
+function describeLaunchError(error) {
+    const message = error && error.message ? error.message : String(error);
+    if (message.includes('ERR_NETWORK_ACCESS_DENIED')) {
+        return 'Chrome cannot reach web.whatsapp.com. Allow outbound HTTPS (port 443) to web.whatsapp.com, then click Connect again.';
+    }
+    if (message.includes('browser is already running') || message.includes('userDataDir')) {
+        return 'The previous WhatsApp browser did not close cleanly. The app will close it before retrying.';
+    }
+    return `WhatsApp launch error: ${message.split('\n')[0]}`;
+}
+
 function scheduleRestart(userId, baseDelayMs = 8000) {
     const s = getSession(userId);
     if (s.destroyed) return; // deliberately torn down; do not resurrect
@@ -321,8 +332,12 @@ async function processInitQueue() {
     } catch (err) {
         const msg = err && err.message ? err.message : String(err);
         console.error(`❌ [user ${userId}] client.initialize() error:`, msg);
-        s.isInitializing = false;
-        s.lastError = `WhatsApp launch error: ${msg.split('\n')[0]}`;
+        s.lastError = describeLaunchError(err);
+        broadcastSSE(userId, { type: 'error', data: s.lastError });
+        // A failed initialize can leave Puppeteer's Chrome process alive.
+        // Always release it before scheduling another attempt; otherwise the
+        // retry races the existing browser for the same LocalAuth profile.
+        await safeDestroyClient(s);
         scheduleRestart(userId, 12000);
     } finally {
         isInitializingAnyClient = false;
@@ -340,7 +355,7 @@ async function processInitQueue() {
  * answer 503 when the server is at its session cap instead of reporting a
  * capacity limit as a 500.
  */
-function initWhatsAppClient(userId) {
+function initWhatsAppClient(userId, { resetFailures = false } = {}) {
     userId = Number(userId);
     if (!Number.isSafeInteger(userId) || userId <= 0) {
         throw new Error('initWhatsAppClient requires a positive integer userId');
@@ -348,6 +363,15 @@ function initWhatsAppClient(userId) {
     const s = getSession(userId);
     s.destroyed = false;
     s.userDisconnected = false;
+
+    // A deliberate Connect click after the automatic retry budget has been
+    // exhausted starts a new recovery cycle. Never reset the counter while a
+    // client or timer is active, or repeated clicks would defeat backoff.
+    if (resetFailures && !s.isInitializing && !s.client && !s.restartTimer) {
+        s.crashCount = 0;
+        s.lastCrashTime = 0;
+        s.lastError = null;
+    }
 
     if (s.isInitializing) {
         if (s.startedAt && Date.now() - s.startedAt > 300000) {
@@ -360,8 +384,17 @@ function initWhatsAppClient(userId) {
             return { accepted: true, alreadyStarting: true };
         }
     }
+    if (s.restartTimer) {
+        return { accepted: true, retryScheduled: true };
+    }
     if (s.isConnected && s.client) {
         return { accepted: true, alreadyConnected: true };
+    }
+    // Do not replace a client that is still being torn down. Replacing its
+    // LocalAuth profile underneath Chrome is what causes the "browser is
+    // already running" loop seen after a Puppeteer launch failure.
+    if (s.client) {
+        return { accepted: true, alreadyStarting: true };
     }
     if (!s.client && countActiveSessions() >= MAX_CONCURRENT_SESSIONS) {
         const reason = 'The server is at capacity for concurrent WhatsApp connections right now. Please try again shortly.';
@@ -372,8 +405,7 @@ function initWhatsAppClient(userId) {
 
     s.isInitializing = true;
     s.startedAt = Date.now();
-    s.lastError = null;
-    s.crashCount = 0;
+    s.isHibernated = false;
     clearTimers(s);
 
     console.log(`🔧 [user ${userId}] Starting WhatsApp Web client...`);
