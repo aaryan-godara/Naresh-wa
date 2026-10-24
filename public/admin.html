@@ -11,9 +11,9 @@
 
 <div class="admin-shell">
     <header class="admin-topbar">
-        <span class="brand"><span class="brand-mark"><span data-icon="message-circle" aria-hidden="true"></span></span> Naressh Israni <span class="admin-badge"><span data-icon="crown" aria-hidden="true"></span> Admin</span></span>
+        <span class="brand"><span class="brand-mark"><img src="/images/logo.jpg" alt="Naressh Israni Logo" class="brand-logo-img"></span> Naressh Israni <span class="admin-badge"><span data-icon="crown" aria-hidden="true"></span> Admin</span></span>
         <div class="admin-topbar-actions">
-            <span id="adminWhoami" style="color:var(--text-on-dark-muted);font-size:.85rem;font-weight:600;"></span>
+            <span id="adminWhoami" class="text-muted text-sm text-bold"></span>
             <a href="/app" class="btn btn-ghost"><span data-icon="layout-dashboard" aria-hidden="true"></span> My Dashboard</a>
             <button class="btn btn-ghost" id="logoutBtn"><span data-icon="log-out" aria-hidden="true"></span> Log Out</button>
         </div>
@@ -32,7 +32,7 @@
                     <input type="search" id="userSearch" placeholder="Search by business or email…">
                 </div>
             </div>
-            <div style="overflow-x:auto">
+            <div class="table-responsive">
                 <table class="admin-table" id="usersTable">
                     <thead>
                         <tr>
@@ -50,7 +50,7 @@
                     <tbody id="usersBody"></tbody>
                 </table>
             </div>
-            <div class="admin-empty" id="usersEmpty" style="display:none">
+            <div class="admin-empty hidden" id="usersEmpty">
                 <span data-icon="users" aria-hidden="true"></span>
                 <div>No accounts match your search.</div>
             </div>
@@ -83,11 +83,11 @@
             <input type="text" id="editPlan" placeholder="free">
         </div>
         <div class="form-field">
-            <label>Monthly Message Limit <small style="color:var(--text-secondary);font-weight:400">(0 = unlimited)</small></label>
+            <label>Monthly Message Limit <small class="text-secondary text-regular">(0 = unlimited)</small></label>
             <input type="number" id="editMessageLimit" min="0" step="1">
         </div>
         <div class="form-field">
-            <label>Chatbot Rule Limit <small style="color:var(--text-secondary);font-weight:400">(0 = unlimited)</small></label>
+            <label>Chatbot Rule Limit <small class="text-secondary text-regular">(0 = unlimited)</small></label>
             <input type="number" id="editRuleLimit" min="0" step="1">
         </div>
         <div class="modal-actions">

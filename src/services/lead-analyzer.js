@@ -175,7 +175,8 @@ async function analyzeConversation(userId, phone) {
                 maxOutputTokens: 2048
             }
         }),
-        'Lead analysis'
+        'Lead analysis',
+        'analysis'
     );
 
     const raw = parseJsonResponse(extractText(response));

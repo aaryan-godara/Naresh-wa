@@ -72,7 +72,7 @@ function showToast(message, type = 'info') {
     toast.innerHTML = `
         <span class="toast-icon" aria-hidden="true">${Icon(iconNames[type])}</span>
         <span class="toast-text">${escapeHtml(message)}</span>
-        <button class="toast-close" aria-label="Dismiss notification" onclick="this.parentElement.remove()">×</button>
+        <button class="toast-close" aria-label="Dismiss notification" data-action="close-toast">×</button>
     `;
     container.appendChild(toast);
 
@@ -306,11 +306,11 @@ async function loadMessages() {
                 <td><span class="badge badge-${msg.direction}">${msg.direction === 'incoming' ? Icon('arrow-down-left') + ' In' : Icon('arrow-up-right') + ' Out'}</span></td>
                 <td>
                     <strong>${escapeHtml(msg.contact_name || msg.phone)}</strong>
-                    ${msg.contact_name ? `<br><small style="color:var(--color-text-secondary)">${escapeHtml(msg.phone)}</small>` : ''}
+                    ${msg.contact_name ? `<br><small class="text-secondary">${escapeHtml(msg.phone)}</small>` : ''}
                 </td>
                 <td><span class="msg-truncate">${escapeHtml(msg.body)}</span></td>
                 <td><span class="badge badge-${msg.status}">${escapeHtml(msg.status)}</span></td>
-                <td style="white-space:nowrap;color:var(--color-text-secondary)">${formatDate(msg.created_at)}</td>
+                <td class="text-secondary text-nowrap">${formatDate(msg.created_at)}</td>
             </tr>
         `).join('');
     } catch (err) {
@@ -362,16 +362,16 @@ async function loadLeads() {
         // Chats not yet analyzed (or with new messages)
         if (pending.length > 0 && !interest && !priority) {
             html += `
-                <div class="card" style="margin-bottom:16px">
+                <div class="card" class="mb-16">
                     <h2 class="card-title">${Icon('hourglass', 'icon-inline')}Awaiting Analysis (${pending.length})</h2>
                     <div class="pending-leads">
                         ${pending.map(p => `
                             <div class="pending-lead-row">
                                 <div>
                                     <strong>${escapeHtml(p.contact_name || p.phone)}</strong>
-                                    <small style="color:var(--color-text-secondary);margin-left:8px">${escapeHtml(p.phone)} · ${p.message_count} msgs</small>
+                                    <small class="text-secondary ml-8">${escapeHtml(p.phone)} · ${p.message_count} msgs</small>
                                 </div>
-                                <button class="btn btn-sm btn-secondary" onclick="analyzeLead(${jsAttr(p.phone)})" type="button">${Icon('brain', 'icon-inline')}Analyze</button>
+                                <button class="btn btn-sm btn-secondary" data-action="analyze-lead" data-phone="${escapeHtml(p.phone)}" type="button">${Icon('brain', 'icon-inline')}Analyze</button>
                             </div>
                         `).join('')}
                     </div>
@@ -408,7 +408,7 @@ function renderLeadCard(lead) {
             <div class="lead-card-header">
                 <div class="lead-identity">
                     <strong>${escapeHtml(lead.contact_name || lead.phone)}</strong>
-                    <small style="color:var(--color-text-secondary)">${escapeHtml(lead.phone)}</small>
+                    <small class="text-secondary">${escapeHtml(lead.phone)}</small>
                 </div>
                 <div class="lead-badges">
                     <span class="lead-badge ${interest.cls}">${interest.label()}</span>
@@ -431,13 +431,13 @@ function renderLeadCard(lead) {
                 </div>` : ''}
 
             <div class="lead-card-footer">
-                <span style="color:var(--color-text-secondary);font-size:0.78rem">
+                <span class="text-secondary text-xs">
                     ${escapeHtml(lead.priority_reason || '')}
                     · Sentiment: ${escapeHtml(lead.sentiment)}
                     · ${lead.message_count} msgs
                     · Analyzed ${timeAgo(lead.last_analyzed_at)}
                 </span>
-                <button class="btn btn-sm btn-secondary" onclick="analyzeLead(${jsAttr(lead.phone)})" type="button" title="Re-analyze with latest messages">${Icon('refresh-cw', 'icon-inline')}Re-analyze</button>
+                <button class="btn btn-sm btn-secondary" data-action="analyze-lead" data-phone="${escapeHtml(lead.phone)}" type="button" title="Re-analyze with latest messages">${Icon('refresh-cw', 'icon-inline')}Re-analyze</button>
             </div>
         </div>`;
 }
@@ -533,7 +533,7 @@ function renderHtmlLegend(containerId, items) {
     const total = items.reduce((s, i) => s + i.value, 0) || 1;
     el.innerHTML = items.map(i => `
         <div class="chart-legend-row">
-            <span class="chart-legend-swatch" style="background:${i.color}"></span>
+            <span class="chart-legend-swatch" data-swatch-key="${escapeHtml(i.key || i.label || "")}"></span>
             <span class="chart-legend-label">${escapeHtml(i.label)}</span>
             <span class="chart-legend-value">${i.formatted !== undefined ? i.formatted : i.value} · ${Math.round(i.value / total * 100)}%</span>
         </div>`).join('');
@@ -736,7 +736,7 @@ async function loadCrm() {
 
         if (deals.length === 0) {
             board.innerHTML = `
-                <div class="empty-state" style="grid-column: 1 / -1">
+                <div class="empty-state empty-state-full">
                     <span class="empty-state-icon" aria-hidden="true">${Icon('trending-up')}</span>
                     <div class="empty-state-title">No deals yet</div>
                     <p>Run a lead analysis (Lead Analysis tab) or add a deal manually — sales chats become deals automatically.</p>
@@ -750,7 +750,7 @@ async function loadCrm() {
             const stageValue = stageDeals.reduce((sum, d) => sum + (parseFloat(d.deal_value) || 0), 0);
             return `
                 <div class="kanban-column" data-stage="${stage}">
-                    <div class="kanban-column-header" style="border-top: 3px solid ${meta.color}">
+                    <div class="kanban-column-header" >
                         <span class="kanban-column-title">${meta.label()}</span>
                         <span class="kanban-column-meta">${stageDeals.length}${stageValue ? ` · ${fmtMoney(stageValue)}` : ''}</span>
                     </div>
@@ -773,8 +773,7 @@ function renderDealCard(deal) {
         : '';
 
     return `
-        <div class="deal-card" onclick="openDealModal(${jsAttr(deal.phone)})" role="button" tabindex="0"
-             onkeydown="if(event.key==='Enter')openDealModal(${jsAttr(deal.phone)})">
+        <div class="deal-card" data-action="open-deal" data-phone="${escapeHtml(deal.phone)}" role="button" tabindex="0">
             <div class="deal-card-top">
                 <strong>${escapeHtml(deal.contact_name || deal.phone)}</strong>
                 ${deal.deal_value ? `<span class="deal-value">${fmtMoney(deal.deal_value)}</span>` : ''}
@@ -839,9 +838,9 @@ async function openDealModal(phone) {
             </div>
 
             <div class="modal-actions">
-                <button class="btn btn-primary btn-sm" onclick="saveDealFromModal(${deal.id})" type="button">${Icon('save', 'icon-inline')}Save Changes</button>
-                <button class="btn btn-danger btn-sm" onclick="deleteDealFromModal(${deal.id})" type="button">${Icon('trash-2', 'icon-inline')}Delete Deal</button>
-                <small style="color:var(--color-text-secondary)">${escapeHtml(deal.phone)} · Source: ${escapeHtml(deal.source || 'whatsapp')}</small>
+                <button class="btn btn-primary btn-sm" data-action="save-deal" data-id="${deal.id}" type="button">${Icon('save', 'icon-inline')}Save Changes</button>
+                <button class="btn btn-danger btn-sm" data-action="delete-deal" data-id="${deal.id}" type="button">${Icon('trash-2', 'icon-inline')}Delete Deal</button>
+                <small class="text-secondary">${escapeHtml(deal.phone)} · Source: ${escapeHtml(deal.source || 'whatsapp')}</small>
             </div>
 
             ${analysis ? `
@@ -852,17 +851,17 @@ async function openDealModal(phone) {
                 </div>` : `
                 <div class="modal-section">
                     <h3>${Icon('target', 'icon-inline')}AI Conversation Insight</h3>
-                    <p style="color:var(--color-text-secondary);font-size:0.85rem">Not analyzed yet — run it from the Lead Analysis tab.</p>
+                    <p class="text-secondary text-sm">Not analyzed yet — run it from the Lead Analysis tab.</p>
                 </div>`}
 
             <div class="modal-section">
                 <h3>${Icon('sticky-note', 'icon-inline')}Activity & Notes</h3>
                 <div class="note-form">
                     <input type="text" id="modalNewNote" placeholder="Add a note… (e.g. called them, sent quote)">
-                    <button class="btn btn-secondary btn-sm" onclick="addNoteFromModal()" type="button">Add</button>
+                    <button class="btn btn-secondary btn-sm" data-action="add-note" type="button">Add</button>
                 </div>
                 <div class="activity-timeline" id="modalActivities">
-                    ${activities.length ? activities.map(renderActivity).join('') : '<p style="color:var(--color-text-secondary);font-size:0.85rem">No activity yet.</p>'}
+                    ${activities.length ? activities.map(renderActivity).join('') : '<p class="text-secondary text-sm">No activity yet.</p>'}
                 </div>
             </div>`;
     } catch (err) {
@@ -967,7 +966,7 @@ function renderProductList(products) {
     if (!container) return;
 
     if (products.length === 0) {
-        container.innerHTML = '<p style="color:var(--color-text-secondary);font-size:0.85rem">No products yet — add your catalog above so the AI can quote it to customers.</p>';
+        container.innerHTML = '<p class="text-secondary text-sm">No products yet — add your catalog above so the AI can quote it to customers.</p>';
         return;
     }
 
@@ -981,8 +980,8 @@ function renderProductList(products) {
                 ${p.url ? `<div class="product-row-desc"><a href="${escapeHtml(p.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(p.url)}</a></div>` : ''}
             </div>
             <div class="rule-actions">
-                <button class="btn btn-sm btn-secondary" onclick="toggleProduct(${p.id}, ${p.is_active ? 0 : 1})" title="${p.is_active ? 'Hide from AI' : 'Show to AI'}" type="button">${Icon(p.is_active ? 'pause' : 'play')}</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteProductRow(${p.id})" title="Delete" type="button">${Icon('trash-2')}</button>
+                <button class="btn btn-sm btn-secondary" data-action="toggle-product" data-id="${p.id}" data-active="${p.is_active ? 0 : 1}" title="${p.is_active ? 'Hide from AI' : 'Show to AI'}" type="button">${Icon(p.is_active ? 'pause' : 'play')}</button>
+                <button class="btn btn-sm btn-danger" data-action="delete-product" data-id="${p.id}" title="Delete" type="button">${Icon('trash-2')}</button>
             </div>
         </div>
     `).join('');
@@ -1050,7 +1049,7 @@ function renderBusinessProfile(profile) {
                     <h4>${Icon('trending-up', 'icon-inline')}Tips to Convert More</h4>
                     <ul>${list(profile.improvement_tips)}</ul>
                 </div>` : ''}
-            ${profile.analyzed_at ? `<small style="color:var(--color-text-secondary)">Analyzed ${timeAgo(profile.analyzed_at)}</small>` : ''}
+            ${profile.analyzed_at ? `<small class="text-secondary">Analyzed ${timeAgo(profile.analyzed_at)}</small>` : ''}
         </div>`;
 }
 
@@ -1109,7 +1108,7 @@ async function loadChatbotRules() {
                 <div class="rule-actions">
                     <button
                         class="btn btn-sm btn-secondary"
-                        onclick="toggleRule(${rule.id}, ${rule.is_active ? 0 : 1})"
+                        data-action="toggle-rule" data-id="${rule.id}" data-active="${rule.is_active ? 0 : 1}"
                         title="${rule.is_active ? 'Disable rule' : 'Enable rule'}"
                         aria-label="${rule.is_active ? 'Disable' : 'Enable'} rule: ${escapeHtml(rule.trigger_keyword)}"
                         type="button">
@@ -1117,7 +1116,7 @@ async function loadChatbotRules() {
                     </button>
                     <button
                         class="btn btn-sm btn-danger"
-                        onclick="deleteRule(${rule.id})"
+                        data-action="delete-rule" data-id="${rule.id}"
                         title="Delete rule"
                         aria-label="Delete rule: ${escapeHtml(rule.trigger_keyword)}"
                         type="button">
@@ -1239,16 +1238,16 @@ async function loadContacts() {
             <tr>
                 <td><input type="checkbox" class="contact-row-check" data-id="${c.id}" data-phone="${escapeHtml(c.phone)}" data-name="${escapeHtml(c.name || '')}" data-reached="${c.last_outreach_at ? '1' : '0'}" aria-label="Select ${escapeHtml(c.name || c.phone)}"></td>
                 <td><strong>${escapeHtml(c.name) || '—'}</strong></td>
-                <td style="color:var(--color-text-secondary)">${escapeHtml(c.phone)}</td>
+                <td class="text-secondary">${escapeHtml(c.phone)}</td>
                 <td>${c.label ? `<span class="badge badge-incoming">${escapeHtml(c.label)}</span>` : '—'}</td>
                 <td>${c.last_outreach_at
                     ? `<span class="reached-pill" title="${formatDate(c.last_outreach_at)}">${Icon('check-circle')} ${formatDate(c.last_outreach_at)}</span>`
                     : `<span class="not-reached-label">Not yet</span>`}</td>
-                <td style="white-space:nowrap;color:var(--color-text-secondary)">${formatDate(c.created_at)}</td>
+                <td class="text-secondary text-nowrap">${formatDate(c.created_at)}</td>
                 <td>
                     <button
                         class="btn btn-sm btn-danger"
-                        onclick="deleteContact(${c.id})"
+                        data-action="delete-contact" data-id="${c.id}"
                         title="Delete contact"
                         aria-label="Delete contact ${escapeHtml(c.name || c.phone)}"
                         type="button">${Icon('trash-2')}</button>
@@ -1353,7 +1352,7 @@ function handleCsvFileSelected(e) {
     reader.onload = async () => {
         const resultBox = document.getElementById('csvImportResult');
         resultBox.style.display = 'block';
-        resultBox.innerHTML = `<p style="color:var(--color-text-secondary)">Importing…</p>`;
+        resultBox.innerHTML = `<p class="text-secondary">Importing…</p>`;
         try {
             const result = await api('/api/contacts/import', {
                 method: 'POST',
@@ -1364,13 +1363,13 @@ function handleCsvFileSelected(e) {
             if (result.updated)  parts.push(`${result.updated} updated`);
             if (result.skipped)  parts.push(`${result.skipped} skipped`);
             resultBox.innerHTML = `
-                <p style="color:var(--color-success);font-weight:600">
+                <p class="text-success text-bold">
                     ${Icon('check-circle')} Import complete — ${parts.join(', ') || 'nothing to do'} (of ${result.total} rows).
                 </p>
                 ${result.errors.length ? `
-                    <details style="margin-top:8px">
-                        <summary style="cursor:pointer;color:var(--color-text-secondary);font-size:.85rem">${result.errors.length} row${result.errors.length === 1 ? '' : 's'} skipped — why</summary>
-                        <ul style="font-size:.8rem;color:var(--color-text-secondary);margin-top:6px">
+                    <details class="mt-8">
+                        <summary class="cursor-pointer text-secondary text-sm">${result.errors.length} row${result.errors.length === 1 ? '' : 's'} skipped — why</summary>
+                        <ul class="text-secondary text-xs mt-6">
                             ${result.errors.slice(0, 50).map(e => `<li>Row ${e.row}: ${escapeHtml(e.reason)}</li>`).join('')}
                             ${result.errors.length > 50 ? `<li>…and ${result.errors.length - 50} more</li>` : ''}
                         </ul>
@@ -1379,7 +1378,7 @@ function handleCsvFileSelected(e) {
             showToast('CSV import complete', 'success');
             loadContacts();
         } catch (err) {
-            resultBox.innerHTML = `<p style="color:var(--color-error)">${Icon('x-circle')} ${escapeHtml(err.message || 'Import failed')}</p>`;
+            resultBox.innerHTML = `<p class="text-error">${Icon('x-circle')} ${escapeHtml(err.message || 'Import failed')}</p>`;
         } finally {
             e.target.value = '';
         }
@@ -1398,7 +1397,7 @@ function openOutreachModal() {
 
     let recipText = `Sending to ${total} contact${total === 1 ? '' : 's'}`;
     if (alreadyReached > 0) {
-        recipText += ` — <span style="color:var(--color-warning)">${alreadyReached} of these ${alreadyReached === 1 ? 'has' : 'have'} already been sent an outreach message before</span>`;
+        recipText += ` — <span class="text-warning">${alreadyReached} of these ${alreadyReached === 1 ? 'has' : 'have'} already been sent an outreach message before</span>`;
     }
     document.getElementById('outreachRecipientCount').innerHTML = recipText;
 
@@ -1497,9 +1496,9 @@ async function loadScheduled() {
 
         tbody.innerHTML = messages.map(msg => `
             <tr>
-                <td style="color:var(--color-text-secondary)">${escapeHtml(msg.phone)}</td>
+                <td class="text-secondary">${escapeHtml(msg.phone)}</td>
                 <td><span class="msg-truncate">${escapeHtml(msg.body)}</span></td>
-                <td style="white-space:nowrap;color:var(--color-text-secondary)">${formatDate(msg.scheduled_at)}</td>
+                <td class="text-secondary text-nowrap">${formatDate(msg.scheduled_at)}</td>
                 <td>
                     <span class="pill pill-${msg.status === 'pending' ? 'pending' : msg.status === 'sent' ? 'active' : 'error'}">
                         ${escapeHtml(msg.status)}
@@ -1507,7 +1506,7 @@ async function loadScheduled() {
                 </td>
                 <td>
                     ${msg.status === 'pending'
-                        ? `<button class="btn btn-sm btn-danger" onclick="cancelScheduled(${msg.id})" aria-label="Cancel scheduled message" type="button">Cancel</button>`
+                        ? `<button class="btn btn-sm btn-danger" data-action="cancel-scheduled" data-id="${msg.id}" aria-label="Cancel scheduled message" type="button">Cancel</button>`
                         : '—'}
                 </td>
             </tr>
@@ -1553,16 +1552,16 @@ async function loadAppointments() {
                 <tr>
                     <td>
                         <strong>${escapeHtml(a.contact_name || a.phone)}</strong>
-                        ${a.contact_name ? `<br><small style="color:var(--color-text-secondary)">${escapeHtml(a.phone)}</small>` : ''}
+                        ${a.contact_name ? `<br><small class="text-secondary">${escapeHtml(a.phone)}</small>` : ''}
                     </td>
-                    <td style="white-space:nowrap;color:var(--color-text-secondary)">${formatDate(a.start_at)}</td>
+                    <td class="text-secondary text-nowrap">${formatDate(a.start_at)}</td>
                     <td>${a.source === 'chatbot' ? Icon('bot', 'icon-inline') + ' Chatbot' : Icon('user', 'icon-inline') + ' Manual'}</td>
                     <td>
                         <span class="pill pill-${a.status === 'confirmed' ? 'active' : 'error'}">${escapeHtml(a.status)}</span>
                     </td>
                     <td>
                         ${a.status === 'confirmed'
-                            ? `<button class="btn btn-sm btn-danger" onclick="cancelAppointment(${a.id})" aria-label="Cancel appointment" type="button">Cancel</button>`
+                            ? `<button class="btn btn-sm btn-danger" data-action="cancel-appointment" data-id="${a.id}" aria-label="Cancel appointment" type="button">Cancel</button>`
                             : '—'}
                     </td>
                 </tr>
@@ -1633,6 +1632,7 @@ async function loadSettings() {
         set('settAiMode',         settings.ai_mode || 'ai_first');
         set('settAiSystemPrompt', settings.ai_system_prompt);
         set('settGeminiApiKey',   settings.gemini_api_key);
+        set('settGeminiModel',    settings.gemini_model || 'auto');
 
         // Business Setup tab data
         loadBusiness();
@@ -1763,14 +1763,14 @@ async function loadCalendarStatus() {
             const cb = document.getElementById('settCalendarCheckAvailability');
             if (cb) cb.checked = !!data.checkAvailability;
         } else {
-            statusEl.innerHTML = `<p style="color:var(--color-text-secondary)">${Icon('x-circle', 'icon-inline')}Not connected</p>`;
+            statusEl.innerHTML = `<p class="text-secondary">${Icon('x-circle', 'icon-inline')}Not connected</p>`;
             connectBtn.style.display = '';
             syncBtn.style.display = 'none';
             disconnectBtn.style.display = 'none';
             availabilityRow.style.display = 'none';
         }
     } catch (err) {
-        statusEl.innerHTML = '<p style="color:var(--color-error)">Could not load calendar status</p>';
+        statusEl.innerHTML = '<p class="text-error">Could not load calendar status</p>';
     }
 }
 
@@ -1926,7 +1926,7 @@ function applyConnectionState(data) {
         if (qrLoading) qrLoading.style.display = 'none';
         if (statusDot)  statusDot.className  = 'status-dot error';
         if (statusText) statusText.textContent = 'Scan QR Code';
-        if (connInfo)   connInfo.innerHTML   = `<p style="color:var(--color-warning)">${Icon('triangle-alert', 'icon-inline')}Waiting for QR Code scan. Go to Settings → WhatsApp QR.</p>`;
+        if (connInfo)   connInfo.innerHTML   = `<p class="text-warning">${Icon('triangle-alert', 'icon-inline')}Waiting for QR Code scan. Go to Settings → WhatsApp QR.</p>`;
 
     } else if (data.type === 'ready') {
         hide(qrLoading); hide(qrImage); show(qrSuccess);
@@ -1940,7 +1940,7 @@ function applyConnectionState(data) {
         hide(qrLoading); hide(qrImage); hide(qrSuccess);
         if (statusDot)  statusDot.className  = 'status-dot error';
         if (statusText) statusText.textContent = 'Disconnected';
-        if (connInfo)   connInfo.innerHTML   = `<p style="color:var(--color-error)">${Icon('x-circle', 'icon-inline')}Not connected</p>`;
+        if (connInfo)   connInfo.innerHTML   = `<p class="text-error">${Icon('x-circle', 'icon-inline')}Not connected</p>`;
 
         if (qrContainer && !document.getElementById('qrReconnectBtnContainer')) {
             const reconnectDiv = document.createElement('div');
@@ -1953,8 +1953,8 @@ function applyConnectionState(data) {
 
             if (waAllowed) {
                 reconnectDiv.innerHTML = `
-                    <p style="color:var(--color-error);font-weight:600;margin-bottom:12px;">${Icon('x-circle', 'icon-inline')} WhatsApp is Disconnected</p>
-                    <button class="btn btn-primary btn-sm" id="reconnectWaBtn" type="button" style="display:inline-flex;align-items:center;gap:6px;">${Icon('refresh-cw', 'icon-inline')} Connect &amp; Show QR Code</button>
+                    <p class="text-error text-bold mb-12">${Icon('x-circle', 'icon-inline')} WhatsApp is Disconnected</p>
+                    <button class="btn btn-primary btn-sm" id="reconnectWaBtn" type="button" class="btn-inline-flex">${Icon('refresh-cw', 'icon-inline')} Connect &amp; Show QR Code</button>
                 `;
                 qrContainer.appendChild(reconnectDiv);
                 document.getElementById('reconnectWaBtn')?.addEventListener('click', async () => {
@@ -1968,8 +1968,8 @@ function applyConnectionState(data) {
                 });
             } else {
                 reconnectDiv.innerHTML = `
-                    <p style="color:var(--color-error);font-weight:600;margin-bottom:12px;">${Icon('x-circle', 'icon-inline')} WhatsApp is Disconnected</p>
-                    <p style="color:var(--color-text-secondary);font-size:.9rem;max-width:340px;margin:0 auto;line-height:1.6;">
+                    <p class="text-error text-bold mb-12">${Icon('x-circle', 'icon-inline')} WhatsApp is Disconnected</p>
+                    <p class="text-secondary text-sm max-w-340 mx-auto">
                         ${Icon('lock', 'icon-inline')} WhatsApp access has not been enabled for your account. Please contact your administrator.
                     </p>
                 `;
@@ -2522,7 +2522,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     owner_name:       document.getElementById('settOwnerName')?.value     || '',
                     ai_mode:          document.getElementById('settAiMode')?.value        || 'ai_first',
                     ai_system_prompt: document.getElementById('settAiSystemPrompt')?.value || '',
-                    gemini_api_key:   document.getElementById('settGeminiApiKey')?.value  || ''
+                    gemini_api_key:   document.getElementById('settGeminiApiKey')?.value  || '',
+                    gemini_model:     document.getElementById('settGeminiModel')?.value   || 'auto'
                 })
             });
             showToast('AI Persona Settings saved!', 'success');
@@ -2596,4 +2597,95 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadCrm();
         }
     }, 15000);
+});
+
+
+// ─── Delegated Event Listeners for Dynamic UI Actions ─────────
+document.addEventListener('click', (e) => {
+    const target = e.target.closest('[data-action]');
+    if (!target) return;
+
+    const action = target.dataset.action;
+    switch (action) {
+        case 'close-toast': {
+            const toast = target.closest('.toast');
+            if (toast) {
+                toast.style.animation = 'slideOut 0.35s ease forwards';
+                setTimeout(() => toast.remove(), 350);
+            }
+            break;
+        }
+        case 'analyze-lead': {
+            const phone = target.dataset.phone;
+            if (phone) analyzeLead(phone);
+            break;
+        }
+        case 'open-deal': {
+            const phone = target.dataset.phone;
+            if (phone) openDealModal(phone);
+            break;
+        }
+        case 'save-deal': {
+            const id = parseInt(target.dataset.id, 10);
+            if (id) saveDealFromModal(id);
+            break;
+        }
+        case 'delete-deal': {
+            const id = parseInt(target.dataset.id, 10);
+            if (id) deleteDealFromModal(id);
+            break;
+        }
+        case 'add-note': {
+            addNoteFromModal();
+            break;
+        }
+        case 'toggle-product': {
+            const id = parseInt(target.dataset.id, 10);
+            const active = parseInt(target.dataset.active, 10);
+            if (id) toggleProduct(id, active);
+            break;
+        }
+        case 'delete-product': {
+            const id = parseInt(target.dataset.id, 10);
+            if (id) deleteProductRow(id);
+            break;
+        }
+        case 'toggle-rule': {
+            const id = parseInt(target.dataset.id, 10);
+            const active = parseInt(target.dataset.active, 10);
+            if (id) toggleRule(id, active);
+            break;
+        }
+        case 'delete-rule': {
+            const id = parseInt(target.dataset.id, 10);
+            if (id) deleteRule(id);
+            break;
+        }
+        case 'delete-contact': {
+            const id = parseInt(target.dataset.id, 10);
+            if (id) deleteContact(id);
+            break;
+        }
+        case 'cancel-scheduled': {
+            const id = parseInt(target.dataset.id, 10);
+            if (id) cancelScheduled(id);
+            break;
+        }
+        case 'cancel-appointment': {
+            const id = parseInt(target.dataset.id, 10);
+            if (id) cancelAppointment(id);
+            break;
+        }
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        const target = e.target.closest('[data-action="open-deal"]');
+        if (target) {
+            e.preventDefault();
+            const phone = target.dataset.phone;
+            if (phone) openDealModal(phone);
+        }
+    }
 });

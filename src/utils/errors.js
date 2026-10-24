@@ -58,8 +58,9 @@ function errorHandler(err, req, res, next) {
 
     const status = err.status || err.statusCode || (err instanceof ValidationError ? 400 : 500);
     const isClientError = status >= 400 && status < 500;
+    const isAiServiceError = (status === 502 || status === 503) && err.code && String(err.code).startsWith('AI_');
 
-    if (isClientError) {
+    if (isClientError || isAiServiceError) {
         const body = { success: false, error: redact(err.message) };
         if (err.code) body.code = err.code;
         if (err.field) body.field = err.field;

@@ -131,27 +131,27 @@ function renderUsers() {
                 <td>
                     <span class="wa-dot ${wa.connected ? 'connected' : ''}">${escapeHtml(waLabel)}</span>
                 </td>
-                <td style="text-align:center">
-                    ${u.role === 'admin' ? `<span class="pill pill-admin" title="Admins always have access">${Icon('crown')} Always</span>` : `<button class="btn btn-tiny" style="background:${u.wa_enabled ? 'var(--color-success)' : 'var(--color-error)'};color:#fff;font-size:.75rem;" onclick="toggleWaAccess(${u.id}, ${u.wa_enabled ? 0 : 1})" type="button" title="${u.wa_enabled ? 'Revoke WhatsApp access' : 'Grant WhatsApp access'}">${u.wa_enabled ? Icon('check-circle') + ' Enabled' : Icon('x-circle') + ' Disabled'}</button>`}
+                <td class="text-center">
+                    ${u.role === 'admin' ? `<span class="pill pill-admin" title="Admins always have access">${Icon('crown')} Always</span>` : `<button class="btn btn-tiny ${u.wa_enabled ? 'btn-wa-status-enabled' : 'btn-wa-status-disabled'}" data-action="toggle-wa-access" data-id="${u.id}" data-enabled="${u.wa_enabled ? 0 : 1}" type="button" title="${u.wa_enabled ? 'Revoke WhatsApp access' : 'Grant WhatsApp access'}">${u.wa_enabled ? Icon('check-circle') + ' Enabled' : Icon('x-circle') + ' Disabled'}</button>`}
                 </td>
                 <td>
-                    <div style="font-size:.8rem;line-height:1.5">
+                    <div class="text-xs">
                         <div>${s.messagesThisMonth || 0} msgs this month</div>
-                        <div style="color:var(--text-secondary)">${s.contacts || 0} contacts · ${s.leads || 0} leads</div>
+                        <div class="text-secondary">${s.contacts || 0} contacts · ${s.leads || 0} leads</div>
                     </div>
                 </td>
                 <td>
-                    <div style="font-size:.8rem;line-height:1.5">
+                    <div class="text-xs">
                         <div>${escapeHtml(u.plan || 'free')}</div>
-                        <div style="color:var(--text-secondary)">${u.message_limit ? u.message_limit + ' msgs/mo' : 'Unlimited msgs'} · ${u.rule_limit ? u.rule_limit + ' rules' : 'Unlimited rules'}</div>
+                        <div class="text-secondary">${u.message_limit ? u.message_limit + ' msgs/mo' : 'Unlimited msgs'} · ${u.rule_limit ? u.rule_limit + ' rules' : 'Unlimited rules'}</div>
                     </div>
                 </td>
-                <td style="color:var(--text-secondary);font-size:.8rem;white-space:nowrap">${formatDate(u.created_at)}</td>
+                <td class="text-secondary text-xs text-nowrap">${formatDate(u.created_at)}</td>
                 <td>
                     <div class="row-actions">
-                        <button class="btn btn-tiny" onclick="openEditModal(${u.id})" type="button" title="Edit">${Icon('settings')}</button>
-                        ${isSelf ? '' : `<button class="btn btn-tiny" onclick="toggleStatus(${u.id}, '${u.status === 'active' ? 'suspended' : 'active'}')" type="button" title="${u.status === 'active' ? 'Suspend' : 'Activate'}">${Icon(u.status === 'active' ? 'pause' : 'play')}</button>`}
-                        ${isSelf ? '' : `<button class="btn btn-danger-sm" onclick="deleteUser(${u.id})" type="button" title="Delete">${Icon('trash-2')}</button>`}
+                        <button class="btn btn-tiny" data-action="open-edit-modal" data-id="${u.id}" type="button" title="Edit">${Icon('settings')}</button>
+                        ${isSelf ? '' : `<button class="btn btn-tiny" data-action="toggle-status" data-id="${u.id}" data-status="${u.status === 'active' ? 'suspended' : 'active'}" type="button" title="${u.status === 'active' ? 'Suspend' : 'Activate'}">${Icon(u.status === 'active' ? 'pause' : 'play')}</button>`}
+                        ${isSelf ? '' : `<button class="btn btn-danger-sm" data-action="delete-user" data-id="${u.id}" type="button" title="Delete">${Icon('trash-2')}</button>`}
                     </div>
                 </td>
             </tr>
@@ -263,3 +263,34 @@ function showToast(message, type = 'success') {
     host.appendChild(el);
     setTimeout(() => el.remove(), 3800);
 }
+
+
+// ─── Delegated Event Listeners for Dynamic Admin Actions ──────
+document.addEventListener('click', (e) => {
+    const target = e.target.closest('[data-action]');
+    if (!target) return;
+
+    const action = target.dataset.action;
+    const id = parseInt(target.dataset.id, 10);
+
+    switch (action) {
+        case 'toggle-wa-access': {
+            const enabled = parseInt(target.dataset.enabled, 10);
+            if (id) toggleWaAccess(id, enabled);
+            break;
+        }
+        case 'open-edit-modal': {
+            if (id) openEditModal(id);
+            break;
+        }
+        case 'toggle-status': {
+            const status = target.dataset.status;
+            if (id) toggleStatus(id, status);
+            break;
+        }
+        case 'delete-user': {
+            if (id) deleteUser(id);
+            break;
+        }
+    }
+});

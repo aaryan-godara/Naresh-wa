@@ -158,7 +158,9 @@
 }
 
 /* ─── Base ───────────────────────────────────────────────── */
-html { font-size: 14px; scroll-behavior: smooth; }
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%; font-size: 14px; scroll-behavior: smooth; }
 
 body {
     font-family: var(--font-body);
@@ -231,9 +233,20 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
     color: #FFFDF6;
     box-shadow: var(--shadow-green);
     flex-shrink: 0;
+    overflow: hidden;
+    background: transparent;
 }
 
 .logo-icon svg { width: 21px; height: 21px; }
+
+.brand-logo-img,
+.logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    display: block;
+}
 
 .logo-text { display: flex; flex-direction: column; min-width: 0; }
 
@@ -2180,3 +2193,109 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
         transition-duration: 0.01ms !important;
     }
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   CSP-Safe Shared Utility Classes (Zero Inline Styles)
+   ═══════════════════════════════════════════════════════════ */
+.hidden { display: none !important; }
+.text-muted, .text-secondary { color: var(--color-text-secondary) !important; }
+.text-success { color: var(--color-success) !important; }
+.text-error { color: var(--color-error) !important; }
+.text-warning { color: var(--color-warning) !important; }
+.text-nowrap { white-space: nowrap !important; }
+.text-bold { font-weight: 600 !important; }
+.text-regular { font-weight: 400 !important; }
+.text-center { text-align: center !important; }
+.text-white { color: #FFFFFF !important; }
+.text-sm { font-size: 0.85rem !important; }
+.text-xs { font-size: 0.78rem !important; }
+.icon-flip { transform: rotate(180deg) !important; display: inline-block; }
+
+.m-0 { margin: 0 !important; }
+.mt-sm { margin-top: var(--space-sm) !important; }
+.mt-md { margin-top: var(--space-md) !important; }
+.mt-8 { margin-top: 8px !important; }
+.mt-12 { margin-top: 12px !important; }
+.mt-14 { margin-top: 14px !important; }
+.mt-16 { margin-top: 16px !important; }
+.mb-sm { margin-bottom: var(--space-sm) !important; }
+.mb-8 { margin-bottom: 8px !important; }
+.mb-12 { margin-bottom: 12px !important; }
+.mb-16 { margin-bottom: 16px !important; }
+.cursor-pointer { cursor: pointer !important; }
+
+.flex-row-wrap { display: flex; gap: 8px; flex-wrap: wrap; }
+.flex-row-center { display: flex; align-items: center; justify-content: space-between; }
+.flex-col-gap { display: flex; flex-direction: column; gap: 12px; }
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.th-select { width: 2.5rem; }
+
+.appt-slot-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.appt-slot-select { flex: 1; min-width: 220px; }
+
+.ai-prompt-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    background: var(--color-bg-card);
+    transition: all .15s ease;
+}
+.ai-prompt-pill:hover {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
+}
+
+.setting-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+.setting-toggle-row:last-child {
+    border-bottom: none;
+}
+.setting-toggle-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+}
+.setting-toggle-desc {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin-top: 2px;
+}
+
+.btn-wa-status-enabled {
+    background: var(--color-success) !important;
+    color: #fff !important;
+    font-size: .75rem !important;
+}
+.btn-wa-status-disabled {
+    background: var(--color-error) !important;
+    color: #fff !important;
+    font-size: .75rem !important;
+}
+.wa-reconnect-box {
+    text-align: center;
+    padding: 24px 16px;
+}
+
+/* Kanban column header colors via data attributes (Zero inline styles) */
+.kanban-col[data-stage="new"] { border-top: 3px solid #3b82f6; }
+.kanban-col[data-stage="qualified"] { border-top: 3px solid #10b981; }
+.kanban-col[data-stage="proposal"] { border-top: 3px solid #f59e0b; }
+.kanban-col[data-stage="won"] { border-top: 3px solid #22c55e; }
+.kanban-col[data-stage="lost"] { border-top: 3px solid #ef4444; }
+
+/* Lead sentiment indicators via data attributes */
+.sentiment-dot[data-sentiment="hot"] { background: var(--color-error); }
+.sentiment-dot[data-sentiment="warm"] { background: var(--color-warning); }
+.sentiment-dot[data-sentiment="cold"] { background: var(--color-info); }

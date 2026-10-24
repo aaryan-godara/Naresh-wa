@@ -48,3 +48,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Temporary scratch and root duplicate files
+scratch/
+/image.jpeg

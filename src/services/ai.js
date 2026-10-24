@@ -181,7 +181,8 @@ async function generateReply(userId, systemPrompt, conversationHistory, contactN
                 maxOutputTokens: 800
             }
         }),
-        'AI reply'
+        'AI reply',
+        'general'
     );
 
     const text = extractText(response);
@@ -251,7 +252,8 @@ async function generateReplyWithBooking(userId, phone, contactName, systemInstru
                 tools: BOOKING_TOOLS
             }
         }),
-        'AI reply (booking)'
+        'AI reply (booking)',
+        'reasoning'
     );
 
     let response = await callModel();

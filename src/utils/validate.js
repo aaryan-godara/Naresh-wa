@@ -469,6 +469,7 @@ const SETTINGS_SCHEMA = {
     away_mode:                    { type: 'bool' },
     lead_analysis_auto:           { type: 'bool' },
     ai_mode:                      { type: 'enum', values: ['ai_first', 'rules_first'] },
+    gemini_model:                 { type: 'enum', values: ['auto', 'gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro-preview'] },
     default_reply:                { max: 4096 },
     away_message:                 { max: 4096 },
     ai_system_prompt:             { max: 8000 },
@@ -485,6 +486,15 @@ const SETTINGS_SCHEMA = {
 
 /** Keys the server writes itself and a client must never be able to set. */
 const SERVER_OWNED_SETTINGS = new Set(['business_ai_profile']);
+
+// Legacy Gemini 2.x mappings for backward compatibility
+const LEGACY_GEMINI_MODEL_MAP = {
+    'gemini-2.5-flash': 'gemini-3.5-flash',
+    'gemini-2.0-flash': 'gemini-3.5-flash',
+    'gemini-2.0-flash-lite': 'gemini-3.5-flash-lite',
+    'gemini-1.5-pro': 'gemini-3.1-pro-preview',
+    'gemini-1.5-flash': 'gemini-3.5-flash'
+};
 
 /**
  * Filters an incoming settings patch down to what the caller may change.
@@ -509,6 +519,11 @@ function validateSettingsPatch(body) {
         }
         const spec = SETTINGS_SCHEMA[key];
         let value = body[key];
+
+        // Transparently upgrade legacy Gemini 2.x model identifiers to Gemini 3.x
+        if (key === 'gemini_model' && typeof value === 'string' && LEGACY_GEMINI_MODEL_MAP[value]) {
+            value = LEGACY_GEMINI_MODEL_MAP[value];
+        }
 
         if (spec.type === 'bool') {
             if (typeof value === 'boolean') value = value ? 'true' : 'false';

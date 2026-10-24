@@ -256,6 +256,25 @@ function prepareLegacyRename(name) {
  * on first boot.
  */
 const MIGRATIONS = [
+    // ── v9: migrate obsolete gemini-2.x settings to gemini-3.x ────────────
+    {
+        version: 9,
+        name: 'migrate obsolete gemini-2.x settings to gemini-3.x',
+        up: () => {
+            if (tableExists('settings')) {
+                db.run(`
+                    UPDATE settings
+                       SET value = 'gemini-3.5-flash'
+                     WHERE key = 'gemini_model' AND (value = 'gemini-2.5-flash' OR value = 'gemini-2.0-flash')
+                `);
+                db.run(`
+                    UPDATE settings
+                       SET value = 'gemini-3.5-flash-lite'
+                     WHERE key = 'gemini_model' AND value = 'gemini-2.0-flash-lite'
+                `);
+            }
+        }
+    },
     // ── v8: admin-controlled WhatsApp access flag ─────────────────────────
     {
         version: 8,
@@ -899,6 +918,7 @@ const DEFAULT_SETTINGS = {
     ai_enabled: 'true',
     ai_system_prompt: 'You are an intelligent AI replying on WhatsApp on behalf of your owner.\n\nGuidelines:\n- Talk naturally, casually, and helpfully just like a real person chatting on WhatsApp.\n- Keep replies brief (1-3 sentences max) and conversational.\n- Do NOT sound like a rigid corporate robot.\n- If asked personal questions or specific plans you don\'t know, politely say you\'ll pass the message to the owner.',
     gemini_api_key: '',
+    gemini_model: 'auto',
     business_website: '',
     business_description: '',
     business_industry: '',

@@ -140,7 +140,8 @@ ${productText}`;
                 maxOutputTokens: 2048
             }
         }),
-        'Business analysis'
+        'Business analysis',
+        'analysis'
     );
 
     const raw = parseJsonResponse(extractText(response));

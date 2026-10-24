@@ -6,7 +6,7 @@
     <title>Naressh Israni — Dashboard</title>
     <meta name="description" content="Manage your WhatsApp Business automation — chatbot rules, contacts, scheduled messages and analytics.">
     <meta name="theme-color" content="#111111">
-    <link rel="stylesheet" href="css/style.css?v=20260913-app-theme">
+    <link rel="stylesheet" href="css/style.css?v=20261025-logo-fix">
 </head>
 <body>
 
@@ -16,12 +16,7 @@
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <div class="logo">
-            <div class="logo-icon">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.61.61l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.94 9.94 0 01-5.39-1.584l-.377-.228-3.91 1.31 1.31-3.91-.228-.377A9.935 9.935 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-                </svg>
-            </div>
+            <div class="logo-icon"><img src="/images/logo.jpg" alt="Naressh Israni Logo" class="brand-logo-img"></div>
             <div class="logo-text">
                 <span class="logo-title">Naressh Israni</span>
                 <span class="logo-subtitle" id="modeIndicator">Demo Mode</span>
@@ -66,7 +61,7 @@
             <span class="nav-icon" data-icon="settings" aria-hidden="true"></span>
             <span class="nav-label">Settings</span>
         </a>
-        <a href="/admin" class="nav-item" id="nav-admin" role="menuitem" style="display:none">
+        <a href="/admin" class="nav-item" id="nav-admin" role="menuitem" class="hidden">
             <span class="nav-icon" data-icon="crown" aria-hidden="true"></span>
             <span class="nav-label">Admin</span>
         </a>
@@ -118,7 +113,7 @@
             </div>
 
             <!-- Error banner placeholder -->
-            <div id="dashboardError" style="display:none"></div>
+            <div id="dashboardError" class="hidden"></div>
 
             <!-- ── Messages ── -->
             <div class="stat-group-title"><span data-icon="message-circle" aria-hidden="true"></span> Messages</div>
@@ -262,7 +257,7 @@
                 <p class="section-subtitle">All incoming and outgoing messages</p>
             </div>
 
-            <div id="messagesError" style="display:none"></div>
+            <div id="messagesError" class="hidden"></div>
 
             <!-- Quick Send -->
             <div class="card quick-send-card">
@@ -326,7 +321,7 @@
                 <p class="section-subtitle">AI-powered summaries, interest detection, issues and priorities for every conversation</p>
             </div>
 
-            <div id="leadsError" style="display:none"></div>
+            <div id="leadsError" class="hidden"></div>
 
             <!-- Lead stats -->
             <div class="stats-grid" role="list" aria-label="Lead metrics">
@@ -399,7 +394,7 @@
                 <p class="section-subtitle">Track every conversation as a deal — auto-filled by AI, managed by you</p>
             </div>
 
-            <div id="crmError" style="display:none"></div>
+            <div id="crmError" class="hidden"></div>
 
             <!-- CRM stats -->
             <div class="stats-grid" role="list" aria-label="CRM metrics">
@@ -464,11 +459,11 @@
                     <button class="btn btn-secondary btn-sm" id="addDealBtn" type="button"><span class="btn-icon" data-icon="plus" aria-hidden="true"></span> Add Deal</button>
                 </div>
                 <div class="topbar-spacer"></div>
-                <small style="color:var(--color-text-secondary)">Deals are auto-created when the AI analyzes a sales chat. Personal chats are skipped.</small>
+                <small class="text-secondary">Deals are auto-created when the AI analyzes a sales chat. Personal chats are skipped.</small>
             </div>
 
             <!-- Add deal form (hidden by default) -->
-            <div class="card" id="addDealCard" style="display:none">
+            <div class="card" id="addDealCard" class="hidden">
                 <h2 class="card-title">Add Deal Manually</h2>
                 <form id="addDealForm" novalidate>
                     <div class="form-row-3">
@@ -525,7 +520,7 @@
                 <p class="section-subtitle">Configure auto-reply rules for incoming messages</p>
             </div>
 
-            <div id="chatbotError" style="display:none"></div>
+            <div id="chatbotError" class="hidden"></div>
 
             <!-- Test widget -->
             <div class="card test-card">
@@ -534,7 +529,7 @@
                     <input type="text" id="testMessage" placeholder="e.g. hello, what are your prices?" aria-label="Test message input">
                     <button class="btn btn-secondary" id="testChatbotBtn" type="button">Test</button>
                 </div>
-                <div class="test-result" id="testResult" style="display:none;" role="alert" aria-live="polite"></div>
+                <div class="test-result" id="testResult" class="hidden" role="alert" aria-live="polite"></div>
             </div>
 
             <!-- Add Rule -->
@@ -602,7 +597,7 @@
                 <p class="section-subtitle">Manage your WhatsApp contacts</p>
             </div>
 
-            <div id="contactsError" style="display:none"></div>
+            <div id="contactsError" class="hidden"></div>
 
             <div class="card">
                 <h2 class="card-title">Add Contact</h2>
@@ -635,9 +630,9 @@
                     <label for="csvFileInput" class="btn btn-secondary" id="csvFileLabel" tabindex="0" role="button">
                         <span data-icon="upload" aria-hidden="true"></span> Choose CSV file
                     </label>
-                    <span id="csvFileName" style="color:var(--color-text-secondary);font-size:.85rem"></span>
+                    <span id="csvFileName" class="text-secondary text-sm"></span>
                 </div>
-                <div id="csvImportResult" style="display:none;margin-top:var(--space-md)"></div>
+                <div id="csvImportResult" class="hidden mt-md"></div>
             </div>
 
             <div class="toolbar">
@@ -647,7 +642,7 @@
             </div>
 
             <div class="card quick-select-card">
-                <h2 class="card-title" style="font-size:.95rem">Quick-select for outreach</h2>
+                <h2 class="card-title text-sm">Quick-select for outreach</h2>
                 <div class="quick-select-row">
                     <label for="quickSelectCount" class="sr-only">Number to select</label>
                     <input type="number" id="quickSelectCount" value="20" min="1" max="25" step="1">
@@ -662,12 +657,12 @@
                         Include already-reached contacts
                     </label>
                 </div>
-                <p class="card-note" style="margin:8px 0 0">Picks from contacts <strong>not yet sent an outreach message</strong> first
+                <p class="card-note mt-8">Picks from contacts <strong>not yet sent an outreach message</strong> first
                     (top of the currently filtered/searched list), so repeated batches of 20 naturally work through your list without
                     re-messaging the same people. Check the box above if you specifically want to re-reach people.</p>
             </div>
 
-            <div class="selection-bar" id="contactsSelectionBar" style="display:none">
+            <div class="selection-bar" id="contactsSelectionBar" class="hidden">
                 <span id="contactsSelectionCount">0 selected</span>
                 <div class="selection-bar-actions">
                     <button type="button" class="btn btn-sm btn-secondary" id="clearSelectionBtn">Clear</button>
@@ -682,7 +677,7 @@
                     <table class="data-table" aria-label="Contacts list">
                         <thead>
                             <tr>
-                                <th scope="col" style="width:2.5rem"><input type="checkbox" id="contactsSelectAll" aria-label="Select all contacts"></th>
+                                <th scope="col" class="th-select"><input type="checkbox" id="contactsSelectAll" aria-label="Select all contacts"></th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Phone</th>
                                 <th scope="col">Label</th>
@@ -708,7 +703,7 @@
                 <p class="section-subtitle">Schedule messages for future delivery</p>
             </div>
 
-            <div id="scheduledError" style="display:none"></div>
+            <div id="scheduledError" class="hidden"></div>
 
             <div class="card">
                 <h2 class="card-title">Schedule a Message</h2>
@@ -761,9 +756,9 @@
                 <p class="section-subtitle">Bookings made by your chatbot, plus anything you add manually</p>
             </div>
 
-            <div id="appointmentsError" style="display:none"></div>
+            <div id="appointmentsError" class="hidden"></div>
 
-            <div class="card" id="apptBookingDisabledNotice" style="display:none">
+            <div class="card" id="apptBookingDisabledNotice" class="hidden">
                 <p class="card-note"><span data-icon="info" data-icon-class="icon-inline" aria-hidden="true"></span>Appointment booking isn't set up yet. Go to <strong>Settings &rarr; Booking</strong> to set your weekly hours and turn it on.</p>
             </div>
 
@@ -783,8 +778,8 @@
                     </div>
                     <div class="form-group">
                         <label for="apptSlotSelect">Available Slot</label>
-                        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-                            <select id="apptSlotSelect" style="flex:1;min-width:220px">
+                        <div class="appt-slot-row">
+                            <select id="apptSlotSelect" class="appt-slot-select">
                                 <option value="">Loading available slots…</option>
                             </select>
                             <button class="btn btn-secondary btn-sm" id="apptRefreshSlotsBtn" type="button">Refresh</button>
@@ -873,7 +868,7 @@
                             </label>
                         </div>
 
-                        <div class="form-group" style="margin-top:16px">
+                        <div class="form-group mt-16">
                             <label for="settDefaultReply">Default Reply (when no rule matches)</label>
                             <textarea id="settDefaultReply" rows="2" placeholder="Fallback auto-reply message…"></textarea>
                         </div>
@@ -955,7 +950,7 @@
                         </div>
                         <button type="submit" class="btn btn-secondary"><span class="btn-icon" data-icon="plus" aria-hidden="true"></span> Add to Catalog</button>
                     </form>
-                    <div class="product-list" id="productList" aria-live="polite" style="margin-top:14px"></div>
+                    <div class="product-list mt-14" id="productList" aria-live="polite"></div>
                 </div>
 
                 <div class="card">
@@ -964,7 +959,7 @@
                     <button class="btn btn-primary" id="analyzeBusinessBtn" type="button">
                         <span class="btn-icon" data-icon="brain" aria-hidden="true"></span> Analyze My Business
                     </button>
-                    <div id="businessProfileResult" style="margin-top:14px"></div>
+                    <div id="businessProfileResult" class="mt-14"></div>
                 </div>
             </div>
 
@@ -982,7 +977,7 @@
                             </label>
                         </div>
 
-                        <div class="form-row" style="margin-top:16px">
+                        <div class="form-row mt-16">
                             <div class="form-group">
                                 <label for="settOwnerName">Your Name / Identity</label>
                                 <input type="text" id="settOwnerName" placeholder="e.g. Alex / My Name" autocomplete="name">
@@ -999,7 +994,7 @@
 
                         <div class="form-group">
                             <label>Quick Persona Presets</label>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+                            <div class="flex-row-wrap mb-8">
                                 <button type="button" class="btn btn-sm btn-secondary preset-btn" data-preset="casual"><span class="btn-icon" data-icon="message-circle" aria-hidden="true"></span> Casual &amp; Friendly</button>
                                 <button type="button" class="btn btn-sm btn-secondary preset-btn" data-preset="assistant"><span class="btn-icon" data-icon="bot" aria-hidden="true"></span> Personal Assistant</button>
                                 <button type="button" class="btn btn-sm btn-secondary preset-btn" data-preset="professional"><span class="btn-icon" data-icon="briefcase" aria-hidden="true"></span> Professional</button>
@@ -1019,6 +1014,17 @@
                             <p class="form-text">Get a free key from <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>.</p>
                         </div>
 
+                        <div class="form-group">
+                            <label for="settGeminiModel">Google Gemini AI Model</label>
+                            <select id="settGeminiModel">
+                                <option value="auto">Auto Fallback (Intelligent Multi-Tier Routing)</option>
+                                <option value="gemini-3.5-flash">Gemini 3.5 Flash (Primary / Conversational &amp; Workflows)</option>
+                                <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (Fast / High-Volume)</option>
+                                <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview (Complex Reasoning &amp; Deep Analysis)</option>
+                            </select>
+                            <p class="form-text">Choose your preferred Gemini 3.x model, or leave on Auto Fallback for automatic multi-tier failover.</p>
+                        </div>
+
                         <button type="submit" class="btn btn-primary" id="saveAiBtn">Save AI Persona Settings</button>
                     </form>
                 </div>
@@ -1032,7 +1038,7 @@
                     <div class="qr-container" id="qrContainer" aria-live="polite">
                         <div class="qr-loading" id="qrLoading">Waiting for QR Code… (This may take up to 30 seconds)</div>
                         <img id="qrImage" src="" alt="WhatsApp QR Code — scan with your phone" class="qr-image">
-                        <div class="qr-success" id="qrSuccess" style="display:none;">
+                        <div class="qr-success" id="qrSuccess" class="hidden">
                             <span data-icon="check-circle" data-icon-class="icon-inline" aria-hidden="true"></span>WhatsApp is Connected!
                         </div>
                     </div>
@@ -1053,17 +1059,17 @@
                         </label>
                     </div>
 
-                    <form id="bookingSettingsForm" novalidate style="margin-top:16px">
+                    <form id="bookingSettingsForm" class="mt-16" novalidate>
                         <div class="form-group">
                             <label>Working Days</label>
-<div id="bookingWorkingDays" style="display:flex;gap:8px;flex-wrap:wrap">
-                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-border);border-radius:20px;font-size:0.85rem;color:var(--color-text-secondary);cursor:pointer"><input type="checkbox" value="1" class="bookingDay" style="margin:0"> Mon</label>
-                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-border);border-radius:20px;font-size:0.85rem;color:var(--color-text-secondary);cursor:pointer"><input type="checkbox" value="2" class="bookingDay" style="margin:0"> Tue</label>
-                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-border);border-radius:20px;font-size:0.85rem;color:var(--color-text-secondary);cursor:pointer"><input type="checkbox" value="3" class="bookingDay" style="margin:0"> Wed</label>
-                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-border);border-radius:20px;font-size:0.85rem;color:var(--color-text-secondary);cursor:pointer"><input type="checkbox" value="4" class="bookingDay" style="margin:0"> Thu</label>
-                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-border);border-radius:20px;font-size:0.85rem;color:var(--color-text-secondary);cursor:pointer"><input type="checkbox" value="5" class="bookingDay" style="margin:0"> Fri</label>
-                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-border);border-radius:20px;font-size:0.85rem;color:var(--color-text-secondary);cursor:pointer"><input type="checkbox" value="6" class="bookingDay" style="margin:0"> Sat</label>
-                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-border);border-radius:20px;font-size:0.85rem;color:var(--color-text-secondary);cursor:pointer"><input type="checkbox" value="0" class="bookingDay" style="margin:0"> Sun</label>
+<div id="bookingWorkingDays" class="flex-row-wrap">
+                                <label class="ai-prompt-pill"><input type="checkbox" value="1" class="bookingDay m-0"> Mon</label>
+                                <label class="ai-prompt-pill"><input type="checkbox" value="2" class="bookingDay m-0"> Tue</label>
+                                <label class="ai-prompt-pill"><input type="checkbox" value="3" class="bookingDay m-0"> Wed</label>
+                                <label class="ai-prompt-pill"><input type="checkbox" value="4" class="bookingDay m-0"> Thu</label>
+                                <label class="ai-prompt-pill"><input type="checkbox" value="5" class="bookingDay m-0"> Fri</label>
+                                <label class="ai-prompt-pill"><input type="checkbox" value="6" class="bookingDay m-0"> Sat</label>
+                                <label class="ai-prompt-pill"><input type="checkbox" value="0" class="bookingDay m-0"> Sun</label>
                             </div>
                         </div>
                         <div class="form-row">
@@ -1121,20 +1127,20 @@
                 <div class="card">
                     <h2 class="card-title"><span data-icon="calendar-clock" data-icon-class="icon-inline" aria-hidden="true"></span>Google Calendar</h2>
                     <p class="card-note">Connect your Google Calendar to log every outreach send as an event, schedule WhatsApp messages by creating an event titled <code>WhatsApp: &lt;phone number&gt;</code> with the message in the description, and optionally skip sends while your calendar shows you're busy.</p>
-                    <div id="calendarNotConfigured" style="display:none">
-                        <p style="color:var(--color-text-secondary)">Google Calendar isn't set up on this server yet. An administrator needs to add <code>GOOGLE_CALENDAR_CLIENT_ID</code>, <code>GOOGLE_CALENDAR_CLIENT_SECRET</code> and <code>GOOGLE_CALENDAR_REDIRECT_URI</code> to the server's environment.</p>
+                    <div id="calendarNotConfigured" class="hidden">
+                        <p class="text-secondary">Google Calendar isn't set up on this server yet. An administrator needs to add <code>GOOGLE_CALENDAR_CLIENT_ID</code>, <code>GOOGLE_CALENDAR_CLIENT_SECRET</code> and <code>GOOGLE_CALENDAR_REDIRECT_URI</code> to the server's environment.</p>
                     </div>
                     <div id="calendarStatus" aria-live="polite">
                         <p>Checking connection…</p>
                     </div>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-                        <button class="btn btn-primary" id="calendarConnectBtn" type="button" style="display:none">
+                    <div class="flex-row-wrap mt-12">
+                        <button class="btn btn-primary" id="calendarConnectBtn" type="button" class="hidden">
                             <span class="btn-icon" data-icon="calendar-clock" aria-hidden="true"></span> Connect Google Calendar
                         </button>
-                        <button class="btn btn-secondary" id="calendarSyncBtn" type="button" style="display:none">Sync Now</button>
-                        <button class="btn btn-secondary" id="calendarDisconnectBtn" type="button" style="display:none">Disconnect</button>
+                        <button class="btn btn-secondary" id="calendarSyncBtn" type="button" class="hidden">Sync Now</button>
+                        <button class="btn btn-secondary" id="calendarDisconnectBtn" type="button" class="hidden">Disconnect</button>
                     </div>
-                    <div class="toggle-group" id="calendarAvailabilityRow" style="display:none;margin-top:16px">
+                    <div class="toggle-group" id="calendarAvailabilityRow" class="hidden mt-16">
                         <span>Skip outreach sends while I'm busy on my calendar</span>
                         <label class="toggle" aria-label="Check calendar availability before sending">
                             <input type="checkbox" id="settCalendarCheckAvailability">
@@ -1150,27 +1156,27 @@
                     <h2 class="card-title"><span data-icon="triangle-alert" data-icon-class="icon-inline" aria-hidden="true"></span>Danger Zone</h2>
                     <p class="card-note">These actions are irreversible. Please be certain before proceeding.</p>
 
-                    <div style="display:flex;flex-direction:column;gap:12px;">
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--color-border);">
+                    <div class="flex-col-gap">
+                        <div class="setting-toggle-row">
                             <div>
-                                <div style="font-weight:600;font-size:0.9rem;color:var(--color-text-primary);">Pause Chatbot</div>
-                                <div style="font-size:0.8rem;color:var(--color-text-secondary);margin-top:2px;">Temporarily stop all auto-replies without losing configuration.</div>
+                                <div class="setting-toggle-title">Pause Chatbot</div>
+                                <div class="setting-toggle-desc">Temporarily stop all auto-replies without losing configuration.</div>
                             </div>
                             <button class="btn btn-danger btn-sm" id="pauseChatbotBtn" type="button">Pause</button>
                         </div>
 
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--color-border);">
+                        <div class="setting-toggle-row">
                             <div>
-                                <div style="font-weight:600;font-size:0.9rem;color:var(--color-text-primary);">Clear Message History</div>
-                                <div style="font-size:0.8rem;color:var(--color-text-secondary);margin-top:2px;">Delete all stored messages from the database permanently.</div>
+                                <div class="setting-toggle-title">Clear Message History</div>
+                                <div class="setting-toggle-desc">Delete all stored messages from the database permanently.</div>
                             </div>
                             <button class="btn btn-danger btn-sm" id="clearMessagesBtn" type="button">Clear All</button>
                         </div>
 
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
+                        <div class="setting-toggle-row">
                             <div>
-                                <div style="font-weight:600;font-size:0.9rem;color:var(--color-text-primary);">Disconnect WhatsApp</div>
-                                <div style="font-size:0.8rem;color:var(--color-text-secondary);margin-top:2px;">Log out of the current WhatsApp session. You will need to re-scan the QR code.</div>
+                                <div class="setting-toggle-title">Disconnect WhatsApp</div>
+                                <div class="setting-toggle-desc">Log out of the current WhatsApp session. You will need to re-scan the QR code.</div>
                             </div>
                             <button class="btn btn-danger btn-sm" id="disconnectBtn" type="button">Disconnect</button>
                         </div>
@@ -1187,7 +1193,7 @@
 <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
 
 <!-- ── Deal Detail Modal ── -->
-<div class="modal-backdrop" id="dealModalBackdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="dealModalTitle">
+<div class="modal-backdrop" id="dealModalBackdrop" class="hidden" role="dialog" aria-modal="true" aria-labelledby="dealModalTitle">
     <div class="modal" id="dealModal">
         <div class="modal-header">
             <h2 id="dealModalTitle">Deal</h2>
@@ -1200,7 +1206,7 @@
 </div>
 
 <!-- ── Outreach Modal ── -->
-<div class="modal-backdrop" id="outreachModalBackdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="outreachModalTitle">
+<div class="modal-backdrop" id="outreachModalBackdrop" class="hidden" role="dialog" aria-modal="true" aria-labelledby="outreachModalTitle">
     <div class="modal" id="outreachModal">
         <div class="modal-header">
             <h2 id="outreachModalTitle">Send Outreach</h2>
@@ -1216,13 +1222,13 @@
                     outreach fully risk-free.</span>
             </div>
 
-            <p id="outreachRecipientCount" style="font-weight:600;margin-bottom:var(--space-sm)"></p>
+            <p id="outreachRecipientCount" class="text-bold mb-sm"></p>
 
             <div id="outreachComposeView">
                 <div class="form-group">
                     <label for="outreachMessage">Message</label>
                     <textarea id="outreachMessage" rows="5" placeholder="Hi {{name}}, ..."></textarea>
-                    <div style="font-size:.78rem;color:var(--color-text-secondary);margin-top:4px">
+                    <div class="text-xs text-secondary mt-4">
                         Use <code>{{name}}</code> to personalize with each contact's saved name.
                     </div>
                 </div>
@@ -1234,11 +1240,11 @@
                 </div>
             </div>
 
-            <div id="outreachProgressView" style="display:none">
-                <p id="outreachProgressSummary" style="margin-bottom:var(--space-sm)"></p>
+            <div id="outreachProgressView" class="hidden">
+                <p id="outreachProgressSummary" class="mb-sm"></p>
                 <div class="outreach-progress-list" id="outreachProgressList"></div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-primary" id="outreachDoneBtn" style="display:none">Done</button>
+                    <button type="button" class="btn btn-primary" id="outreachDoneBtn" class="hidden">Done</button>
                 </div>
             </div>
         </div>
